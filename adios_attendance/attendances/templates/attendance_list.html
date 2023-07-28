@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance List{% endblock %}
+
+{% block content %}
+<h1>Attendance List</h1>
+<h3>{{ student.name }}님의 출석 기록</h3>
+<ul>
+    {% for attendance in attendance_records %}
+    <li>{{ attendance.date }}</li>
+    {% endfor %}
+</ul>
+<br>
+<a href="{% url 'dashboard' %}">Dashboard로 돌아가기</a>
+{% endblock %}

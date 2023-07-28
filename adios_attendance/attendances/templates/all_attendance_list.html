@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}All Attendance List{% endblock %}
+
+{% block content %}
+<h1>All Attendance List</h1>
+{% if students %}
+<ul>
+    {% for student in students %}
+    <li>
+        {{ student.name }}: {{ student.attendance_status }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>다른 회원이 없습니다.</p>
+{% endif %}
+<br>
+<a href="{% url 'dashboard' %}">Dashboard로 돌아가기</a>
+{% endblock %}

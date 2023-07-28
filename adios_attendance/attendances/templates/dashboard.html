@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<h3>{{ student.name }}님, 환영합니다!</h3>
+{% if todays_attendance %}
+<p>오늘은 이미 출석 체크하셨습니다.</p>
+{% else %}
+<form method="post" action="{% url 'check_in' %}">
+    {% csrf_token %}
+    <button type="submit">출석 체크</button>
+</form>
+{% endif %}
+<br>
+<h2>출석 기록</h2>
+<ul>
+    {% for record in attendance_records %}
+    <li>{{ record.date }}</li>
+    {% endfor %}
+</ul>
+<br>
+<h2>모든 회원 출석 체크 현황</h2>
+<ul>
+    {% for student in all_students %}
+    <li>
+        {{ student.name }}: {{ student.attendance_status }}
+    </li>
+    {% endfor %}
+</ul>
+<br>
+<a href="{% url 'attendance_list' %}">출석 기록 확인</a>
+{% endblock %}
+
+
+
+

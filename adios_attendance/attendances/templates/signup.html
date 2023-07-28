@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}회원가입{% endblock %}
+
+{% block content %}
+<h1>회원가입</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">회원가입</button>
+</form>
+<p>이미 회원이신가요? <a href="{% url 'login' %}">로그인</a></p>
+{% endblock %}
