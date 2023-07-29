@@ -8,7 +8,7 @@
 {% if todays_attendance %}
 <p>오늘은 이미 출석 체크하셨습니다.</p>
 {% else %}
-<form method="post" action="{% url 'check_in' %}">
+<form method="post" action="{% url 'attendance:check_in' %}">
     {% csrf_token %}
     <button type="submit">출석 체크</button>
 </form>
@@ -30,7 +30,7 @@
     {% endfor %}
 </ul>
 <br>
-<a href="{% url 'attendance_list' %}">출석 기록 확인</a>
+<a href="{% url 'attendance:attendance_list' %}">출석 기록 확인</a>
 {% endblock %}
 
 

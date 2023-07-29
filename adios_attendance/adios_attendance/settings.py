@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 import os
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -140,4 +140,4 @@ SESSION_COOKIE_HTTPONLY = True  # JavaScript에서 세션 쿠키 접근 여부 (
 SESSION_COOKIE_SECURE = False  # HTTPS에서만 세션 쿠키 사용 여부 (기본값: False)
 SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF 보호를 위한 SameSite 설정 (기본값: 'Lax')
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'attendances.Student'
