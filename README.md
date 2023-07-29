@@ -6,6 +6,6 @@
 
 ## Tools
 
-<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=FFFFFF"/>
+<img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=FFFFFF"/> <img src="https://img.shields.io/badge/intellij idea-000000?style=flat-square&logo=intellijidea&logoColor=FFFFFF"/>
 
 ![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=y2chan&show_icons=true&theme=dark)
