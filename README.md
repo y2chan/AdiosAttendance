@@ -2,7 +2,7 @@
 
 ## Languages
 
-<img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=Python&logoColor=FFFFFF"/> <img src="https://img.shields.io/badge/MySQL-F2F2F2?style=flat-square&logo=MySQL&logoColor=4479A1"/>
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=Python&logoColor=FFFFFF"/> <img src="https://img.shields.io/badge/MySQL-F2F2F2?style=flat-square&logo=MySQL&logoColor=4479A1"/> <img src="https://img.shields.io/badge/DJango-F2F2F2?style=flat-square&logo=DJango&logoColor=092E20"/>
 
 ## Tools
 
