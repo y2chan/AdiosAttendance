@@ -5,11 +5,31 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* 가운데 정렬 스타일 */
+        .centered {
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0; /* 상하 20px의 마진 추가 */
+            margin: 20px; /* 좌우 20px의 마진 추가 */
+            margin-top: 20px; /* 상단에 10px의 간격 추가 */
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
+    <h1><img class="logo" src="{% static 'images/AdiosLogo.png' %}" alt="Adios Logo">{% block header %}{% endblock %}</h1>
     {% block content %}
     {% endblock %}
 </div>
 </body>
 </html>
+

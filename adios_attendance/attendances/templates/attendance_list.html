@@ -4,12 +4,12 @@
 
 {% block content %}
 <h1>Attendance List</h1>
-<h3>{{ student.name }}님의 출석 기록</h3>
-<ul>
-    {% for attendance in attendance_records %}
-    <li>{{ attendance.date }}</li>
-    {% endfor %}
-</ul>
+<h2>{{ student.name }}님의 최근 출석 기록</h2>
+{% if attendance_records %}
+<p>{{ attendance_records.0.date }}</p>
+{% else %}
+<p>출석 기록이 없습니다.</p>
+{% endif %}
 <br>
-<a href="{% url 'attendance:dashboard' %}">Dashboard로 돌아가기</a>
+<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
 {% endblock %}

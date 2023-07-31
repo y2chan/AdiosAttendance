@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}연습 불가 날짜 & 사유 목록{% endblock %}
+
+{% block content %}
+<h1>연습 불가 날짜 & 사유 목록</h1>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_available_add' %}'">연습 불가 날짜 & 사유 등록</button>
+
+{% for practice_available in practice_availables %}
+<div class="practice-available-item">
+    <h3>{{ practice_available.name }}</h3>
+    <p>{{ practice_available.date }}</p>
+    <p>{{ practice_available.content }}</p>
+    <p>등록일: {{ practice_available.created_at }}</p>
+</div>
+{% endfor %}
+<br>
+<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
+{% endblock %}

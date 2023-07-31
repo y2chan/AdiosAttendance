@@ -1,9 +1,28 @@
 body {
-    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* 배경색 지정 */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+  width: 180px; /* 로고 이미지의 가로 크기 */
+  height: auto; /* 세로 크기는 가로 크기에 맞춰 자동 조정 */
+  margin-right: 10px; /* 로고 오른쪽에 10px의 여백 추가 */
+  margin-top: px;
 }
 
 h1 {
+    text-align: center;
     color: #007BFF;
+}
+
+h2 {
+    text-align: center;
+    color: #007BFF;
+    margin-top: 20px; /* h2 태그 위쪽 여백 추가 */
 }
 
 form {
@@ -46,6 +65,31 @@ ul {
     padding: 0;
 }
 
-li {
-    margin-bottom: 5px;
+ul.blog-list {
+  list-style: none;
+  padding: 0;
 }
+
+ul.blog-list li {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+ul.blog-list li h3 {
+  color: #007BFF;
+}
+
+ul.blog-list li p {
+  margin-top: 5px;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: space-between; /* 왼쪽과 오른쪽을 최대한 간격을 두고 정렬 */
+    align-items: flex-start; /* 위쪽을 기준으로 정렬 */
+    margin-top: 30px; /* 상단에 여백 추가 */
+}
+
+

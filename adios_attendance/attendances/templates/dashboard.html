@@ -1,38 +1,40 @@
 {% extends 'base.html' %}
 
 {% block title %}Dashboard{% endblock %}
-
 {% block content %}
 <h1>Dashboard</h1>
-<h3>{{ student.name }}님, 환영합니다!</h3>
+<h3>{{ student.name }}님, 오늘도 즐거운 연습되세요!</h3>
 {% if todays_attendance %}
 <p>오늘은 이미 출석 체크하셨습니다.</p>
 {% else %}
-<form method="post" action="{% url 'attendance:check_in' %}">
+<form method="post" action="{% url 'attendances:check_in' %}">
     {% csrf_token %}
     <button type="submit">출석 체크</button>
+    {% endif %}
 </form>
-{% endif %}
 <br>
-<h2>출석 기록</h2>
-<ul>
-    {% for record in attendance_records %}
-    <li>{{ record.date }}</li>
-    {% endfor %}
-</ul>
-<br>
-<h2>모든 회원 출석 체크 현황</h2>
-<ul>
-    {% for student in all_students %}
-    <li>
-        {{ student.name }}: {{ student.attendance_status }}
-    </li>
-    {% endfor %}
-</ul>
-<br>
-<a href="{% url 'attendance:attendance_list' %}">출석 기록 확인</a>
+<div class="dashboard-container">
+    <div class="container">
+        <h2><a href="{% url 'attendances:attendance_list' %}"> 내 출석</a></h2>
+        <ul>
+            {% for record in attendance_records %}
+            <li>{{ record.date }} ({{ record.date|date:"D" }})</li>
+            {% endfor %}
+        </ul>
+        <br>
+    </div>
+    <div class="container">
+        <h2><a href="{% url 'attendances:notice' %}"> 공지사항 </a></h2>
+    </div>
+    <div class="container">
+        <h2><a href="{% url 'attendances:practice_date_list' %}"> 연습 일정 목록 </a></h2>
+    </div>
+    <div class="container">
+        <h2><a href="{% url 'attendances:practice_available_list' %}"> 연습 불가 날짜 & 사유 </a></h2>
+    </div>
+    <div class="container">
+        <h2><a href="{% url 'attendances:all_attendance_list' %}"> 모든 단원 출석 현황 </a></h2>
+        <br>
+    </div>
+</div>
 {% endblock %}
-
-
-
-

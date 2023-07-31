@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, student_id, name, password=None):
         if not student_id:
@@ -39,4 +40,31 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.name} - {self.date}"
+
+class Notice(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class PracticeAvailable(models.Model):
+    date = models.DateField()
+    content = models.TextField(default='')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.date)
+
+
+class AvailableDate(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    content = models.TextField(default='')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.date}"
+
 

@@ -13,8 +13,8 @@
     {% endfor %}
 </ul>
 {% else %}
-<p>다른 회원이 없습니다.</p>
+<p>다른 단원이 없습니다.</p>
 {% endif %}
 <br>
-<a href="{% url 'attendance:dashboard' %}">Dashboard로 돌아가기</a>
+<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
 {% endblock %}
