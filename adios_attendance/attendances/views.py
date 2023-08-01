@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import date, timedelta, datetime
-from .forms import SignUpForm, AttendanceForm, LoginForm, DateForm, PracticeAvailableForm
+from .forms import SignUpForm, AttendanceForm, LoginForm, DateForm, PracticeAvailableForm, NoticeForm
 from .models import Student, Attendance, Notice, PracticeAvailable, AvailableDate, PracticeDateDetail
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
@@ -237,6 +237,19 @@ def notice_delete(request, notice_id):
 
      return render(request, 'notice_delete.html', {'notice': notice})
 
+def notice_detail(request, notice_id):
+    notice = get_object_or_404(Notice, id=notice_id)
+
+    if request.method == 'POST':
+        form = NoticeForm(request.POST, instance=notice)
+        if form.is_valid():
+            form.save()
+            return redirect('attendances:notice')  # Redirect to the notice list page
+
+    else:
+        form = NoticeForm(instance=notice)
+
+    return render(request, 'notice_detail.html', {'form': form, 'notice': notice})
 
 def practice_date(request):
     if request.method == 'POST':
@@ -376,6 +389,20 @@ def practice_available_list(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'practice_available_list.html', {'practice_availables': practice_availables, 'page_obj': page_obj})
+
+def practice_available_detail(request, practice_available_id):
+    practice_available = get_object_or_404(PracticeAvailable, id=practice_available_id)
+
+    if request.method == 'POST':
+        form = PracticeAvailableForm(request.POST, instance=practice_available)
+        if form.is_valid():
+            form.save()
+            return redirect('attendances:practice_available_list')  # Redirect to the practice_available_list page
+
+    else:
+        form = PracticeAvailableForm(instance=practice_available)
+
+    return render(request, 'practice_available_detail.html', {'form': form, 'practice_available': practice_available})
 
 def delete_practice_available(request, pk):
     try:

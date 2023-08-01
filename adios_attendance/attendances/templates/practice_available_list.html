@@ -55,7 +55,6 @@
     </li>
 </ul>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_available_add' %}'">연습 불가 날짜 & 사유 등록</button>
-<br>
 <div class="row">
     {% for practice_available in page_obj %}
     <div class="col-md-4 mb-4">
@@ -64,12 +63,8 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ practice_available.title }}</h5>
                     <p class="card-text">{{ practice_available.content }}</p>
-                    <p class="card-text">{{ practice_available.student.name }}</p>
-                    <p class="card-text">{{ practice_available.date|date:"Y-m-d" }}</p>
-                    <form action="{% url 'attendances:delete_practice_available' practice_available.pk %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
-                    </form>
+                    <p class="card-text">{{ practice_available.date|date:"Y-m-d" }}   {{ practice_available.student.name }}</p>
+                    <a href="{% url 'attendances:practice_available_detail' practice_available.id %}" class="btn btn-primary">상세 정보 확인</a>
                 </div>
             </div>
         </div>

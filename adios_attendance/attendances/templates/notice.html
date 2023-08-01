@@ -5,6 +5,36 @@
 {% block title %}공지사항{% endblock %}
 
 {% block content %}
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: -10px; /* 추가: 카드 간 좌우 간격 설정 */
+    }
+
+    .col-md-4 {
+        flex-basis: calc(20% - 20px);
+        margin: 10px; /* 수정: 카드 간 좌우 간격 설정 */
+    }
+
+    .card {
+        height: 100%;
+    }
+
+    .card-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-title {
+        font-size: 18px; /* 글씨 크기 설정 */
+        font-weight: bold; /* 굵기 설정 */
+        text-overflow: ellipsis;
+    }
+</style>
+
 <h1>공지사항</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 100%;">
 <ul class="url-buttons">
@@ -28,23 +58,28 @@
     </li>
 </ul>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:notice_add' %}'">공지 등록</button>
-
 {% if notices %}
-<ul class="blog-list">
+<div class="row">
     {% for notice in notices %}
-    <li>
-        <h3>{{ notice.title }}</h3>
-        <p>{{ notice.content }}</p>
-        <p>{{ notice.created_at|date:"Y-m-d H:i" }}</p>
-        <form method="post" action="{% url 'attendances:notice_delete' notice.id %}">
-            {% csrf_token %}
-            <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
-        </form>
-    </li>
+    <div class="col-md-4 mb-4">
+        <div class="border border-primary rounded p-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ notice.title }}</h5>
+                    <p class="card-text">{{ notice.content }}</p>
+                    <p class="card-text">{{ notice.created_at|date:"Y-m-d H:i" }}</p>
+                    <a href="{% url 'attendances:notice_detail' notice.id %}" class="btn btn-primary">상세 정보 확인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-md-12 mb-4">
+        <p>최근 한 달 내의 공지가 없습니다.</p>
+    </div>
     {% endfor %}
-</ul>
-{% else %}
-<p>최근 한 달 내의 공지가 없습니다.</p>
-{% endif %}
+    {% endif %}
+</div>
 {% endblock %}
+
 

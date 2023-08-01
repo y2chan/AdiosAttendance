@@ -1,0 +1,26 @@
+<!-- practice_available_detail.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}연습 불가 날짜 & 사유 상세 정보{% endblock %}
+
+{% block content %}
+<h1>연습 불가 날짜 & 사유 상세 정보</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">저장</button>
+</form>
+
+<form action="{% url 'attendances:delete_practice_available' practice_available.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+</form>
+
+<br>
+<a href="{% url 'attendances:practice_available_list' %}">목록으로 돌아가기</a>
+<br>
+<br>
+{% endblock %}

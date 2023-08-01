@@ -31,7 +31,7 @@
     <ul class="blog-list">
         {% for available_date in available_dates %}
         <li>
-            {{ available_date.name }} - {{ available_date.date }} ({{ available_date.date|date:"D" }})<br><br>
+            {{ available_date.name }} - {{ available_date.date|date:"Y-m-d" }} ({{ available_date.date|date:"D" }})<br><br>
             {{ available_date.content }}
             <br>
             <form method="POST" action="{% url 'attendances:practice_date_detail' available_date.pk %}">

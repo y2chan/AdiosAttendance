@@ -11,6 +11,15 @@
 </div>
 </body>
 </html>
+<style>
+    .btn {
+      /* Set a fixed width and height for the buttons */
+      width: 120px;
+      height: 40px;
+      /* Add other common button styles here */
+      /* For example, you can set the background color, font size, etc. */
+    }
+</style>
 {% block content %}
 <h1>Adios Attendance</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 20%;">
@@ -19,5 +28,4 @@
 <br>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:signup' %}'">회원가입</button>
 <br>
-<h>정보 : 회원가입에는 학번과 비밀번호만 있으면 된다!</h>
 {% endblock %}

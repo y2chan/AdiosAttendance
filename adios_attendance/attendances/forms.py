@@ -1,5 +1,5 @@
 from django import forms
-from .models import Student, Attendance, AvailableDate, PracticeAvailable, PracticeDateDetail
+from .models import Student, Attendance, AvailableDate, PracticeAvailable, PracticeDateDetail, Notice
 
 class SignUpForm(forms.ModelForm):
     class Meta:
@@ -9,6 +9,10 @@ class SignUpForm(forms.ModelForm):
             'student_id': '학번',
             'name': '이름',
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.label_suffix = ''
 
 class AttendanceForm(forms.ModelForm):
     class Meta:
@@ -32,6 +36,10 @@ class DateForm(forms.ModelForm):
             'date': '날짜',
             'content': '내용'
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.label_suffix = ''
 
 class PracticeAvailableForm(forms.ModelForm):
     class Meta:
@@ -44,11 +52,28 @@ class PracticeAvailableForm(forms.ModelForm):
         labels = {
             'student': '작성자',
             'title': '제목',
-            'date': '날짜',
-            'content': '내용'
+            'date': '연습 불가 날짜',
+            'content': '사유'
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.label_suffix = ''
 
 class PracticeDateDetailForm(forms.ModelForm):
     class Meta:
         model = PracticeDateDetail
         fields = ['practice_date', 'user', 'is_attending']
+
+class NoticeForm(forms.ModelForm):
+    class Meta:
+        model = Notice
+        fields = ['title', 'content']
+        labels = {
+                    'title': '제목',
+                    'content': '내용'
+                }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.label_suffix = ''
