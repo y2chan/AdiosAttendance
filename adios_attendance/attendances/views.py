@@ -53,6 +53,18 @@ def dashboard(request):
     todays_attendance = Attendance.objects.filter(user=student_from_session, available_date__date=date.today()).exists()
 
     form = AttendanceForm(request.POST or None)
+    thousand_days_date = date(2023, 10, 4)
+    sept_twelve_date = date(2023, 9, 12)
+    today = date.today()
+    days_left_to_sept_twelve = (sept_twelve_date - today).days
+    days_left_to_thousand_days = (thousand_days_date - today).days
+
+    if days_left_to_sept_twelve > 0:
+        message = f"동아리 박람회까지 {days_left_to_sept_twelve}일 남았다!!!"
+    elif days_left_to_thousand_days > 0:
+        message = f"천보축전까지 {days_left_to_thousand_days}일 남았다!!!"
+    else:
+        message = "고생했다 얘들아!!!"
 
     if request.method == 'POST':
         if form.is_valid():
@@ -77,6 +89,10 @@ def dashboard(request):
         'form': form,
         'attendance_records': attendance_records,
         'all_students': all_students,
+        'todays_attendance': todays_attendance,
+        'message': message,
+        'days_left_to_sept_twelve': days_left_to_sept_twelve,
+        'days_left_to_thousand_days' : days_left_to_thousand_days
     }
 
     return render(request, 'dashboard.html', context)
@@ -423,8 +439,3 @@ def practice_available_add(request):
         form = PracticeAvailableForm()
 
     return render(request, 'practice_available_add.html', {'form': form})
-
-
-
-
-

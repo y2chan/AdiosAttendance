@@ -13,18 +13,8 @@
 </html>
 {% block content %}
 <h1>Dashboard</h1>
-<button class="btn btn-primary" onclick="location.href='{% url 'attendances:user_login' %}'">로그인 페이지로 돌아가기</button>
 <br>
 <hr align="center" style="border: solid 5px #007BFF; width: 50%;"/>
-<h3>{{ student.name }}님, 오늘도 즐거운 연습되세요!</h3>
-{% if todays_attendance %}
-<p>오늘은 이미 출석 체크하셨습니다.</p>
-{% else %}
-<form method="post" action="{% url 'attendances:check_in' %}">
-    {% csrf_token %}
-    <button type="submit">출석 체크</button>
-    {% endif %}
-</form>
 <ul class="url-buttons">
     <li class="url-button">
         <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
@@ -42,4 +32,15 @@
         <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
     </li>
 </ul>
+<h3>{{ student.name }}님, 오늘도 즐거운 연습되세요!</h3>
+{% if todays_attendance %}
+<p>오늘은 이미 출석 체크하셨습니다.</p>
+<h4>{{ message }}</h4>
+{% else %}
+    <form method="post" action="{% url 'attendances:check_in' %}">
+    {% csrf_token %}
+    <button type="submit">출석 체크</button>
+</form>
+{% endif %}
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:user_login' %}'">로그인 페이지로 돌아가기</button>
 {% endblock %}
