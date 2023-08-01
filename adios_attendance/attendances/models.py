@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, student_id, name, password=None):
@@ -34,37 +36,53 @@ class Student(AbstractUser):
     def __str__(self):
         return f"{self.student_id} - {self.name}"
 
-class Attendance(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+class AvailableDate(models.Model):
+    name = models.CharField(max_length=100)
     date = models.DateField()
+    content = models.TextField(default='')
+    created_date = models.DateTimeField(auto_now_add=True)
+    attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Attendance')
 
     def __str__(self):
-        return f"{self.student.name} - {self.date}"
+         return f"{self.name} - {self.date}"
+
+class Attendance(models.Model):
+    # 각 참가자들의 연습 일정과 관련된 정보를 저장
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    available_date = models.ForeignKey(AvailableDate, on_delete=models.CASCADE)
+    is_attending = models.BooleanField(default=False)
+    # id = models.AutoField(primary_key=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.available_date}"
 
 class Notice(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
 
 class PracticeAvailable(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, default='')
+    title = models.CharField(max_length=100)  # title 필드의 모델에서 CharField로 변경
     date = models.DateField()
-    content = models.TextField(default='')
+    content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.date)
 
 
-class AvailableDate(models.Model):
-    name = models.CharField(max_length=100)
-    date = models.DateField()
-    content = models.TextField(default='')
-    created_date = models.DateTimeField(auto_now_add=True)
+User = get_user_model()
+
+class PracticeDateDetail(models.Model):
+    practice_date = models.ForeignKey(AvailableDate, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_attending = models.BooleanField(default=None, null=True)
 
     def __str__(self):
-        return f"{self.name} - {self.date}"
+        return f"{self.practice_date.name} - {self.user.username}"
 
 

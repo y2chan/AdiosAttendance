@@ -1,15 +1,111 @@
-{% extends 'base.html' %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        white-space: nowrap; /* 줄바꿈 방지 */
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    .attendance-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .attendance-records, .weekly-attendance {
+        width: 49%;
+    }
+
+</style>
+
+
+{% extends 'base.html' %}
 {% block title %}Attendance List{% endblock %}
 
 {% block content %}
-<h1>Attendance List</h1>
-<h2>{{ student.name }}님의 최근 출석 기록</h2>
-{% if attendance_records %}
-<p>{{ attendance_records.0.date }}</p>
-{% else %}
-<p>출석 기록이 없습니다.</p>
-{% endif %}
-<br>
-<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
+<h1>내 출석</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:dashboard' %}" class="url-link">Dashboard</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
+</ul>
+<h2>{{ student.name }}님의 출석 기록</h2>
+<div class="attendance-container">
+    <div class="attendance-records">
+        <h3>출석 기록</h3>
+        {% if attendance_records %}
+        <ul>
+            {% for record in attendance_records %}
+            <li>{{ record.available_date.date }} ({{ record.available_date.date|date:"D" }})</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>출석 기록이 없습니다.</p> <!-- 추가된 부분: 출석 기록이 없는 경우 메시지 출력 -->
+        {% endif %}
+    </div>
+    <div class="weekly-attendance">
+        {% if analyzed_attendance %}
+        <table>
+            <tr>
+                <th colspan="4">주별 출석 횟수</th>
+            </tr>
+            <tr>
+                <th>주</th>
+                <th>출석 횟수</th>
+                <th>시작일</th>
+                <th>종료일</th>
+            </tr>
+            {% for week_number, data in analyzed_attendance.items %}
+            <tr>
+                <td>{% if week_number == 0 %}
+                    이번 주
+                    {% elif week_number == 1 %}
+                    저번 주
+                    {% else %}
+                    {{ week_number }}주 전
+                    {% endif %}</td>
+                <td>{% if data.count == 0 %}
+                    출석 없음
+                    {% else %}
+                    {{ data.count }} 번
+                    {% endif %}</td>
+                <td>{{ data.start_date|date:"Y-m-d" }}</td>
+                <td>{{ data.end_date|date:"Y-m-d" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>주별 출석 정보가 없습니다.</p>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
+

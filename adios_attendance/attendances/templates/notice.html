@@ -1,9 +1,32 @@
+<!-- notice.html -->
+
 {% extends 'base.html' %}
 
 {% block title %}공지사항{% endblock %}
 
 {% block content %}
 <h1>공지사항</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:dashboard' %}" class="url-link">Dashboard</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
+</ul>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:notice_add' %}'">공지 등록</button>
 
 {% if notices %}
@@ -12,13 +35,16 @@
     <li>
         <h3>{{ notice.title }}</h3>
         <p>{{ notice.content }}</p>
-        <p>작성일 : {{ notice.date }}</p>
+        <p>{{ notice.created_at|date:"Y-m-d H:i" }}</p>
+        <form method="post" action="{% url 'attendances:notice_delete' notice.id %}">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+        </form>
     </li>
     {% endfor %}
 </ul>
 {% else %}
 <p>최근 한 달 내의 공지가 없습니다.</p>
 {% endif %}
-<br>
-<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
 {% endblock %}
+

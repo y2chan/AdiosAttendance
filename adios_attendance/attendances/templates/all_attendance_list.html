@@ -3,18 +3,58 @@
 {% block title %}All Attendance List{% endblock %}
 
 {% block content %}
-<h1>All Attendance List</h1>
-{% if students %}
-<ul>
-    {% for student in students %}
-    <li>
-        {{ student.name }}: {{ student.attendance_status }}
+<h1>전체 출석 목록</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:dashboard' %}" class="url-link">Dashboard</a>
     </li>
-    {% endfor %}
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
 </ul>
-{% else %}
-<p>다른 단원이 없습니다.</p>
-{% endif %}
-<br>
-<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
+<form method="get">
+    <label for="date">날짜 선택</label>
+    <input type="date" id="date" name="date" value="{% if selected_date %}{{ selected_date }}{% endif %}">
+    <button type="submit">조회</button>
+</form>
+<div class="attendance-container">
+    <div class="attendance-records">
+        <h3>출석 목록</h3>
+        {% if attendance_present_students %}
+        <ul>
+            {% for student in attendance_present_students %}
+            <li>{{ student.name }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>출석한 인원이 없습니다.</p>
+        {% endif %}
+    </div>
+    <div class="attendance-records">
+        <h3>결석 목록</h3>
+        {% if attendance_absent_students %}
+        <ul>
+            {% for student in attendance_absent_students %}
+            <li>{{ student.name }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>결석한 인원이 없습니다.</p>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
+

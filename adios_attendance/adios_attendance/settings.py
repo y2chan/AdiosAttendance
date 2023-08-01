@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'attendances'
+    'attendances',
+    'bootstrap_datepicker'
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,8 @@ STATICFILES_DIRS = []
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+LOGIN_URL = '/user_login/'
 
 # 세션 관련 설정
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 세션 데이터를 DB에 저장 (기본 설정)

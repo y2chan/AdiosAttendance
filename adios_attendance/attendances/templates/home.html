@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<title>{% block title %}Adios 동아리 출석 시스템{% endblock %}</title>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div> <h1><img class="logo" src="{% static 'images/AdiosLogo.png' %}" alt="Adios Logo"></h1>
+</div>
+</body>
+</html>
+{% block content %}
+<h1>Adios Attendance</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 20%;">
+<br>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:user_login' %}'">로그인</button>
+<br>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:signup' %}'">회원가입</button>
+<br>
+<h>정보 : 회원가입에는 학번과 비밀번호만 있으면 된다!</h>
+{% endblock %}

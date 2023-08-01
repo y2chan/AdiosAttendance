@@ -1,25 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}불가능한 날짜 등록{% endblock %}
+{% block title %}연습 불가 날짜 & 사유 등록{% endblock %}
 
 {% block content %}
-<h1>불가능한 날짜 등록</h1>
+<h1>연습 불가 날짜 & 사유 등록</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
 <form method="post" action="{% url 'attendances:practice_available_add' %}">
     {% csrf_token %}
-    <label for="name">이름:</label>
-    <input type="text" name="name" id="name">
-    <br>
-    <label for="date">날짜:</label>
-    <input type="date" name="date" id="date">
-    <br>
-    <label for="content">내용:</label>
-    <textarea name="content" id="content" cols="30" rows="5"></textarea>
-    <br>
+    {{ form.as_p }}  {# 폼 필드들을 표시 #}
     <button type="submit">등록</button>
 </form>
+
 <br>
-<a href="{% url 'attendances:practice_available_list' %}">연습 불가 날짜 & 사유 목록으로 돌아가기</a>
+<a href="{% url 'attendances:practice_available_list' %}">목록으로 돌아가기</a>
+<br>
+<br>
 {% endblock %}
+
 
 
 

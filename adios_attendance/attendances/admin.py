@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from .models import Student, Attendance
 
@@ -8,6 +7,4 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('student', 'date')
-
-
+    list_display = ('user', 'available_date', 'is_attending')

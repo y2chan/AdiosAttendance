@@ -7,6 +7,79 @@ body {
     justify-content: center;
 }
 
+.url-buttons {
+    display: flex;
+}
+
+.url-button{
+    background-color: #FFFFFF;
+    flex-grow: 1;
+    transition: 0.5s
+}
+
+.url-link{
+    display: block;
+    padding: 16px;
+    font-size: 16px; /* 버튼 내용의 글자 크기를 조정합니다. */
+    font-weight: bold; /* 버튼 내용의 글자 굵기를 조정합니다. */
+    text-decoration: none; /* 버튼 내용에 밑줄을 제거합니다. */
+    color: #000000; /* 버튼 내용의 글자 색상을 지정합니다. */
+    text-align: center;
+}
+
+.url-link:hover {
+    color: #FFFFFF;
+}
+
+.url-button:hover {
+    background-color: #007BFF; /* 버튼 위로 커서를 올렸을 때 배경 색상을 변경합니다. */
+    flex-grow: 1.2;
+}
+
+.url-button:hover::after {
+     transform: scaleX(1);
+}
+
+/* 가운데 정렬 스타일 */
+.centered {
+  text-align: center;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0; /* 상하 20px의 마진 추가 */
+  margin: 20px; /* 좌우 20px의 마진 추가 */
+  margin-top: 20px; /* 상단에 10px의 간격 추가 */
+}
+
+.header-with-logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #007BFF; /* 선을 하나 그어 줍니다 */
+  padding-bottom: 10px; /* 선과 헤더 사이의 간격을 조정합니다 */
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px; /* 사진과 헤더 사이의 간격을 조정합니다 */
+}
+
+.border {
+    border: 3px solid #007BFF; /* 선이 있는 #007BFF 색으로 설정 */
+    width: 180px; /* 가로 길이를 설정 (원하는 크기로 조절) */
+    height: 180px; /* 세로 길이를 설정 (원하는 크기로 조절) */
+    padding: 20px; /* 카드 내부 여백 설정 */
+    margin: 10px; /* 카드 사이 여백 설정 */
+    display: inline-block; /* 카드들이 한 줄에 나열되도록 설정 */
+}
+
 .logo {
   width: 180px; /* 로고 이미지의 가로 크기 */
   height: auto; /* 세로 크기는 가로 크기에 맞춰 자동 조정 */
@@ -45,6 +118,7 @@ button {
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -71,10 +145,12 @@ ul.blog-list {
 }
 
 ul.blog-list li {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
+  border: 3px solid #007BFF;
+  width: 180px; /* 가로 길이를 설정 (원하는 크기로 조절) */
+  height: 180px; /* 세로 길이를 설정 (원하는 크기로 조절) */
+  padding: 20px; /* 카드 내부 여백 설정 */
+  margin: 10px; /* 카드 사이 여백 설정 */
+  display: inline-block; /* 카드들이 한 줄에 나열되도록 설정 */
 }
 
 ul.blog-list li h3 {
@@ -91,5 +167,4 @@ ul.blog-list li p {
     align-items: flex-start; /* 위쪽을 기준으로 정렬 */
     margin-top: 30px; /* 상단에 여백 추가 */
 }
-
 

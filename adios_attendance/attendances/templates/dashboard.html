@@ -1,8 +1,21 @@
-{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
+<!DOCTYPE html>
+<html>
+<title>{% block title %}Dashboard{% endblock %}</title>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div> <h1><img class="logo" src="{% static 'images/AdiosLogo.png' %}" alt="Adios Logo"></h1>
+</div>
+</body>
+</html>
 {% block content %}
 <h1>Dashboard</h1>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:user_login' %}'">로그인 페이지로 돌아가기</button>
+<br>
+<hr align="center" style="border: solid 5px #007BFF; width: 50%;"/>
 <h3>{{ student.name }}님, 오늘도 즐거운 연습되세요!</h3>
 {% if todays_attendance %}
 <p>오늘은 이미 출석 체크하셨습니다.</p>
@@ -12,29 +25,21 @@
     <button type="submit">출석 체크</button>
     {% endif %}
 </form>
-<br>
-<div class="dashboard-container">
-    <div class="container">
-        <h2><a href="{% url 'attendances:attendance_list' %}"> 내 출석</a></h2>
-        <ul>
-            {% for record in attendance_records %}
-            <li>{{ record.date }} ({{ record.date|date:"D" }})</li>
-            {% endfor %}
-        </ul>
-        <br>
-    </div>
-    <div class="container">
-        <h2><a href="{% url 'attendances:notice' %}"> 공지사항 </a></h2>
-    </div>
-    <div class="container">
-        <h2><a href="{% url 'attendances:practice_date_list' %}"> 연습 일정 목록 </a></h2>
-    </div>
-    <div class="container">
-        <h2><a href="{% url 'attendances:practice_available_list' %}"> 연습 불가 날짜 & 사유 </a></h2>
-    </div>
-    <div class="container">
-        <h2><a href="{% url 'attendances:all_attendance_list' %}"> 모든 단원 출석 현황 </a></h2>
-        <br>
-    </div>
-</div>
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
+</ul>
 {% endblock %}

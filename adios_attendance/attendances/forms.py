@@ -1,15 +1,19 @@
 from django import forms
-from .models import Student, AvailableDate
+from .models import Student, Attendance, AvailableDate, PracticeAvailable, PracticeDateDetail
 
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['student_id','name']
+        fields = ['student_id', 'name']
+        labels = {
+            'student_id': '학번',
+            'name': '이름',
+        }
 
-class AttendanceForm(forms.Form):
-    # 출석 체크에 필요한 필드들을 여기에 추가합니다
-    # 예: date = forms.DateField()
-    pass
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['user', 'available_date', 'is_attending']
 
 class LoginForm(forms.Form):
     student_id = forms.CharField(label='학번', max_length=10)
@@ -23,3 +27,28 @@ class DateForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'content': forms.Textarea(attrs={'rows': 3}),
         }
+        labels = {
+            'name': '이름',
+            'date': '날짜',
+            'content': '내용'
+        }
+
+class PracticeAvailableForm(forms.ModelForm):
+    class Meta:
+        model = PracticeAvailable
+        fields = ['student', 'title', 'date', 'content']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'content': forms.Textarea(attrs={'rows': 3}),
+        }
+        labels = {
+            'student': '작성자',
+            'title': '제목',
+            'date': '날짜',
+            'content': '내용'
+        }
+
+class PracticeDateDetailForm(forms.ModelForm):
+    class Meta:
+        model = PracticeDateDetail
+        fields = ['practice_date', 'user', 'is_attending']

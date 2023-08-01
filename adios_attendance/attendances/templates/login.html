@@ -1,13 +1,22 @@
-{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}로그인{% endblock %}
-
+<!DOCTYPE html>
+<html>
+<title>{% block title %}로그인{% endblock %}</title>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div> <h1><img class="logo" src="{% static 'images/AdiosLogo.png' %}" alt="Adios Logo"></h1>
+</div>
+</body>
+</html>
 {% block content %}
 <h1>Adios 출석 로그인</h1>
 {% if error_message %}
 <p>{{ error_message }}</p>
 {% endif %}
-<form method="post" action="{% url 'attendances:login' %}">
+<form method="post" action="{% url 'attendances:user_login' %}">
     {% csrf_token %}
     <label for="student_id">학번</label>
     <input type="text" id="student_id" name="student_id" required>

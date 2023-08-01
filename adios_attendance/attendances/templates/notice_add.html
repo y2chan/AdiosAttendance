@@ -4,16 +4,19 @@
 
 {% block content %}
 <h1>공지 등록</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
 <form method="post" action="{% url 'attendances:notice_add' %}">
     {% csrf_token %}
-    <label for="title">제목:</label>
+    <label for="title">제목</label>
     <input type="text" name="title" id="title">
     <br>
-    <label for="content">내용:</label>
+    <label for="content">내용</label>
     <textarea name="content" id="content" cols="30" rows="5"></textarea>
     <br>
     <button type="submit">등록</button>
 </form>
 <br>
 <a href="{% url 'attendances:notice' %}">공지로 돌아가기</a>
+<br>
+<br>
 {% endblock %}

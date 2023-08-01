@@ -3,17 +3,46 @@
 {% block title %}연습 일정 목록{% endblock %}
 
 {% block content %}
+
 <h1>연습 일정 목록</h1>
-<button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_date' %}'">연습 일정 등록</button>
-<ul class="blog-list">
-    {% for available_date in available_dates %}
-    <li>
-        {{ available_date.date }} - {{ available_date.name }} ({{ available_date.date|date:"D" }})
-        <br>
-        {{ available_date.content }}
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:dashboard' %}" class="url-link">Dashboard</a>
     </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
+</ul>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_date' %}'">연습 일정 등록</button>
+{% if available_dates %}
+    <ul class="blog-list">
+        {% for available_date in available_dates %}
+        <li>
+            {{ available_date.name }} - {{ available_date.date }} ({{ available_date.date|date:"D" }})<br><br>
+            {{ available_date.content }}
+            <br>
+            <form method="POST" action="{% url 'attendances:practice_date_detail' available_date.pk %}">
+                {% csrf_token %}
+                <input type="submit" value="참여 인원 확인">
+            </form>
+        </li>
     {% endfor %}
 </ul>
+{% else %}
 <br>
-<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
+<p>일정이 없습니다.</p>
+{% endif %}
 {% endblock %}

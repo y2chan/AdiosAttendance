@@ -3,17 +3,116 @@
 {% block title %}연습 불가 날짜 & 사유 목록{% endblock %}
 
 {% block content %}
-<h1>연습 불가 날짜 & 사유 목록</h1>
-<button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_available_add' %}'">연습 불가 날짜 & 사유 등록</button>
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: -10px; /* 추가: 카드 간 좌우 간격 설정 */
+    }
 
-{% for practice_available in practice_availables %}
-<div class="practice-available-item">
-    <h3>{{ practice_available.name }}</h3>
-    <p>{{ practice_available.date }}</p>
-    <p>{{ practice_available.content }}</p>
-    <p>등록일: {{ practice_available.created_at }}</p>
-</div>
-{% endfor %}
+    .col-md-4 {
+        flex-basis: calc(20% - 20px);
+        margin: 10px; /* 수정: 카드 간 좌우 간격 설정 */
+    }
+
+    .card {
+        height: 100%;
+    }
+
+    .card-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-title {
+        font-size: 18px; /* 글씨 크기 설정 */
+        font-weight: bold; /* 굵기 설정 */
+        text-overflow: ellipsis;
+    }
+</style>
+<h1>연습 불가 날짜 & 사유 목록</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<ul class="url-buttons">
+    <li class="url-button">
+        <a href="{% url 'attendances:dashboard' %}" class="url-link">Dashboard</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:attendance_list' %}" class="url-link">내 출석</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
+    </li>
+    <li class="url-button">
+        <a href="{% url 'attendances:all_attendance_list' %}" class="url-link">전체 출석 목록</a>
+    </li>
+</ul>
+<button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_available_add' %}'">연습 불가 날짜 & 사유 등록</button>
 <br>
-<a href="{% url 'attendances:dashboard' %}">Dashboard로 돌아가기</a>
+<div class="row">
+    {% for practice_available in page_obj %}
+    <div class="col-md-4 mb-4">
+        <div class="border border-primary rounded p-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ practice_available.title }}</h5>
+                    <p class="card-text">{{ practice_available.content }}</p>
+                    <p class="card-text">{{ practice_available.student.name }}</p>
+                    <p class="card-text">{{ practice_available.date|date:"Y-m-d" }}</p>
+                    <form action="{% url 'attendances:delete_practice_available' practice_available.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-md-12 mb-4">
+        <p>내용이 없습니다.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Practice Available Pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                {{ page_obj.number }}
+                <span class="sr-only">(current)</span>
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}

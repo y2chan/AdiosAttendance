@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}연습 일정 상세보기{% endblock %}
+
+{% block content %}
+
+<style>
+    .detail-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .attendees-container, .non-attendees-container, .unvoted-users-container {
+        flex: 1;
+        margin-right: 20px;
+        margin: 20px;
+    }
+
+    .attendees-container h3, .non-attendees-container h3, .unvoted-users-container h3 {
+        border-bottom: 2px solid #007BFF;
+        padding-bottom: 5px;
+    }
+
+    .name-list {
+        column-count: 1;
+    }
+
+    .name-list li {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .name-list li:nth-child(5n) {
+        display: block;
+        margin-right: 0;
+    }
+
+    .checkbox-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+</style>
+
+<h1>연습 일정 상세보기</h1>
+<hr align=center style="border: solid 5px #007BFF; width: 100%;">
+<h2>{{ selected_post.date }} - {{ selected_post.name }} ({{ selected_post.date|date:"D" }})</h2>
+<br> {{ selected_post.content }}
+
+<div class="checkbox-list">
+    <form method="post" action="{% url 'attendances:update_attendance_status' selected_post.id %}">
+        {% csrf_token %}
+        <div class="checkbox-list">
+            <div class="checkbox-item">
+                <input type="checkbox" name="is_attending" value="True" id="attend" {% if user_vote and user_vote.is_attending %}checked{% endif %}>
+                <label for="attend">참가하기</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" name="is_attending" value="False" id="absent" {% if user_vote and not user_vote.is_attending %}checked{% endif %}>
+                <label for="absent">불참하기</label>
+            </div>
+        </div>
+        <button type="submit">선택</button>
+    </form>
+</div>
+
+
+
+
+<br>
+<div class="detail-container">
+    {% if attendees %}
+    <div class="attendees-container">
+        <h3>참가자 목록</h3>
+        <ul class="name-list">
+            {% for attendee in attendees %}
+            <li>{{ attendee.user.name }}</li>
+            {% endfor %}
+        </ul>
+        <p>{{ attendees.count }} 명</p>
+    </div>
+    {% endif %}
+
+    {% if non_attendees %}
+    <div class="non-attendees-container">
+        <h3>불참자 목록</h3>
+        <ul class="name-list">
+            {% for non_attendee in non_attendees %}
+            <li>{{ non_attendee.user.name }}</li>
+            {% endfor %}
+        </ul>
+        <p>{{ non_attendees.count }} 명</p>
+    </div>
+    {% endif %}
+
+    {% if unvoted_users %}
+    <div class="unvoted-users-container">
+        <h3>비투표 목록</h3>
+        <ul class="name-list">
+            {% for unvoted_user in unvoted_users %}
+            <li>{{ unvoted_user.name }}</li>
+            {% endfor %}
+        </ul>
+        <p>{{ unvoted_users.count }} 명</p>
+    </div>
+    {% endif %}
+</div>
+
+<br>
+<form method="post" action="{% url 'attendances:update_attendance_status' selected_post.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="available_date_id" value="{{ selected_post.id }}">
+    <input type="submit" onclick="return confirm('삭제하시겠습니까?')" value="삭제">
+</form>
+<br>
+<a href="{% url 'attendances:practice_date_list' %}">연습 일정 목록으로 돌아가기</a>
+<br>
+{% endblock %}
+

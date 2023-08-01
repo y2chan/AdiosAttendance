@@ -1,13 +1,21 @@
-{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}회원가입{% endblock %}
+<!DOCTYPE html>
+<html>
+<title>{% block title %}회원가입{% endblock %}</title>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div> <h1><img class="logo" src="{% static 'images/AdiosLogo.png' %}" alt="Adios Logo"></h1>
+</div>
+</body>
+</html>
 
-{% block content %}
 <h1>회원가입</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">회원가입</button>
 </form>
-<p>이미 회원이신가요? <a href="{% url 'attendances:login' %}">로그인</a></p>
-{% endblock %}
+<p>이미 회원이신가요? <a href="{% url 'attendances:user_login' %}">로그인</a></p>
