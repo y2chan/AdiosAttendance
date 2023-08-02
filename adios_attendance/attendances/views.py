@@ -8,8 +8,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.paginator import Paginator, Page
 from functools import wraps
-from django.contrib.auth.decorators import login_required
-from .decorators import user_login_required
 import logging
 
 
@@ -50,7 +48,7 @@ def dashboard(request):
         return redirect('attendances:user_login')
 
     # 현재 날짜의 출결 정보가 있는지 확인
-    todays_attendance = Attendance.objects.filter(user=student_from_session, available_date__date=date.today()).exists()
+    todays_attendance = Attendance.objects.filter(user=student_from_session, date=date.today()).exists()
 
     form = AttendanceForm(request.POST or None)
     thousand_days_date = date(2023, 10, 4)
@@ -76,12 +74,12 @@ def dashboard(request):
             return redirect('attendances:dashboard')
 
     # 학생의 출결 기록을 가져옵니다. user 필드를 사용하고, available_date__date를 기준으로 내림차순 정렬합니다.
-    attendance_records = Attendance.objects.filter(user=student_from_session).order_by('-available_date__date')
+    attendance_records = Attendance.objects.filter(user=student_from_session).order_by('-date')
     all_students = Student.objects.all()
 
     # 모든 학생들의 출결 상태를 업데이트합니다. available_date__date를 기준으로 상태를 업데이트하도록 변경하였습니다.
     for student in all_students:
-        student.attendance_status = "출석" if student.attendance_set.filter(available_date__date=date.today()).exists() else "결석"
+        student.attendance_status = "출석" if student.attendance_set.filter(date=date.today()).exists() else "결석"
 
     context = {
         'student': student_from_session,
@@ -106,14 +104,13 @@ def check_in(request):
     student_id = request.session['student_id']
     student = Student.objects.get(student_id=student_id)
 
-    # Check if the AvailableDate for today exists, otherwise create it
+    # 오늘 날짜를 가져와서 출석 정보를 확인합니다.
     today = date.today()
-    available_date_instance, _ = AvailableDate.objects.get_or_create(date=today)
-
     try:
-        today_attendance = Attendance.objects.get(user=student, available_date=available_date_instance)
+        today_attendance = Attendance.objects.get(user=student, date=today)
     except Attendance.DoesNotExist:
-        today_attendance = Attendance.objects.create(user=student, available_date=available_date_instance)
+        # 출석 정보가 없으면 생성합니다.
+        today_attendance = Attendance.objects.create(user=student, date=today)
 
     return redirect('attendances:dashboard')
 
@@ -137,7 +134,7 @@ def analyze_attendance_per_week(attendance_records, today_weekday):
         end_date = start_date + timedelta(days=6)  # 현재 주의 일요일로 설정
 
         # 해당 주에 출석한 횟수를 세어 analyzed_data에 추가합니다.
-        weekly_attendance_count = attendance_records.filter(available_date__date__range=[start_date, end_date]).count()
+        weekly_attendance_count = attendance_records.filter(date__range=[start_date, end_date]).count()
         analyzed_data[week_number] = {
             'count': weekly_attendance_count,
             'start_date': start_date,
@@ -157,13 +154,13 @@ def attendance_list(request):
     student = Student.objects.get(student_id=student_id)
 
     # 해당 학생의 출석 기록을 가져옵니다.
-    attendance_records = Attendance.objects.filter(user=student).order_by('-available_date__date')
+    attendance_records = Attendance.objects.filter(user=student).order_by('-date')
 
     # 이번 주 기간과 오늘의 요일을 가져옵니다.
     start_date, end_date, today_weekday = get_this_week_range()
 
     # 해당 학생의 이번 주 출석 기록을 가져옵니다.
-    this_week_attendance_records = attendance_records.filter(available_date__date__range=[start_date, end_date])
+    this_week_attendance_records = attendance_records.filter(date__range=[start_date, end_date])
 
     # 이번 주 출석 횟수를 세는 함수를 호출하여 분석합니다.
     analyzed_attendance = analyze_attendance_per_week(this_week_attendance_records, today_weekday)
@@ -203,7 +200,7 @@ def all_attendance_list(request):
 
     # 모든 학생들의 출결 상태를 업데이트합니다.
     for student in all_students:
-        attendance_status = "출석" if student.attendance_set.filter(available_date__date=selected_date).exists() else "결석"
+        attendance_status = "출석" if student.attendance_set.filter(date=selected_date).exists() else "결석"
         setattr(student, 'attendance_status', attendance_status)
 
     # 선택한 날짜의 출석과 결석한 학생들을 필터링합니다.
@@ -382,19 +379,16 @@ def update_attendance_status(request, available_date_id):
 
     return redirect('attendances:practice_date_detail', pk=available_date_id)
 
-
-
-
-
 def delete_practice_date_detail(request, pk):
-    # 삭제할 연습 일정 객체를 가져옵니다.
-    practice_date = get_object_or_404(AvailableDate, pk=pk)
+    practice_date_detail = get_object_or_404(PracticeDateDetail, pk=pk)
 
     if request.method == 'POST':
         # POST 요청일 때만 삭제를 수행합니다.
-        practice_date.delete()
+        practice_date_detail.delete()
+        messages.success(request, '연습 일정이 삭제되었습니다.')
         return redirect('attendances:practice_date_list')
 
+    # POST 요청이 아닌 경우, 해당 연습 일정 상세 페이지로 리디렉션합니다.
     return redirect('attendances:practice_date_detail', pk=pk)
 
 def practice_available_list(request):

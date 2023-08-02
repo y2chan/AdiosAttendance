@@ -17,7 +17,7 @@ class SignUpForm(forms.ModelForm):
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
-        fields = ['user', 'available_date', 'is_attending']
+        fields = ['user', 'date', 'is_attending']
 
 class LoginForm(forms.Form):
     student_id = forms.CharField(label='학번', max_length=10)
@@ -44,14 +44,13 @@ class DateForm(forms.ModelForm):
 class PracticeAvailableForm(forms.ModelForm):
     class Meta:
         model = PracticeAvailable
-        fields = ['student', 'title', 'date', 'content']
+        fields = ['student', 'date', 'content']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'content': forms.Textarea(attrs={'rows': 3}),
         }
         labels = {
             'student': '작성자',
-            'title': '제목',
             'date': '연습 불가 날짜',
             'content': '사유'
         }

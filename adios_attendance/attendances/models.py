@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.utils import timezone
+from datetime import date
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, student_id, name, password=None):
@@ -41,7 +42,6 @@ class AvailableDate(models.Model):
     date = models.DateField()
     content = models.TextField(default='')
     created_date = models.DateTimeField(auto_now_add=True)
-    attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Attendance')
 
     def __str__(self):
          return f"{self.name} - {self.date}"
@@ -49,12 +49,12 @@ class AvailableDate(models.Model):
 class Attendance(models.Model):
     # 각 참가자들의 연습 일정과 관련된 정보를 저장
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    available_date = models.ForeignKey(AvailableDate, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
     is_attending = models.BooleanField(default=False)
     # id = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.available_date}"
+        return f"{self.user.username} - {self.date}"
 
 class Notice(models.Model):
     title = models.CharField(max_length=200)
@@ -66,7 +66,6 @@ class Notice(models.Model):
 
 class PracticeAvailable(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, default='')
-    title = models.CharField(max_length=100)  # title 필드의 모델에서 CharField로 변경
     date = models.DateField()
     content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
@@ -79,10 +78,12 @@ User = get_user_model()
 
 class PracticeDateDetail(models.Model):
     practice_date = models.ForeignKey(AvailableDate, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_attending = models.BooleanField(default=None, null=True)
 
     def __str__(self):
         return f"{self.practice_date.name} - {self.user.username}"
+
+
 
 

@@ -45,7 +45,7 @@
         <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
     </li>
     <li class="url-button">
-        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">투표</a>
     </li>
     <li class="url-button">
         <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
@@ -61,9 +61,8 @@
         <div class="border border-primary rounded p-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ practice_available.title }}</h5>
-                    <p class="card-text">{{ practice_available.content }}</p>
                     <p class="card-text">{{ practice_available.date|date:"Y-m-d" }}   {{ practice_available.student.name }}</p>
+                    <p class="card-text">{{ practice_available.content }}</p>
                     <a href="{% url 'attendances:practice_available_detail' practice_available.id %}" class="btn btn-primary">상세 정보 확인</a>
                 </div>
             </div>

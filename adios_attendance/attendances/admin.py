@@ -7,4 +7,4 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('user', 'available_date', 'is_attending')
+    list_display = ('user', 'date', 'is_attending')

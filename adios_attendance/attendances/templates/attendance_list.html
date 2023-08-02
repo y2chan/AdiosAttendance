@@ -32,6 +32,7 @@
 
 
 {% extends 'base.html' %}
+{% load custom_filters %}
 {% block title %}Attendance List{% endblock %}
 
 {% block content %}
@@ -48,7 +49,7 @@
         <a href="{% url 'attendances:notice' %}" class="url-link">공지</a>
     </li>
     <li class="url-button">
-        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">연습 일정 목록</a>
+        <a href="{% url 'attendances:practice_date_list' %}" class="url-link">투표</a>
     </li>
     <li class="url-button">
         <a href="{% url 'attendances:practice_available_list' %}" class="url-link">연습 불가 날짜 & 사유</a>
@@ -64,7 +65,7 @@
         {% if attendance_records %}
         <ul>
             {% for record in attendance_records %}
-            <li>{{ record.available_date.date }} ({{ record.available_date.date|date:"D" }})</li>
+            <li>{{ record.date|date:"Y-m-d" }} ({{ record.date|date:"l"|korean_day }})</li>
             {% endfor %}
         </ul>
         {% else %}

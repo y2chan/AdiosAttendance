@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-
-{% block title %}연습 일정 상세보기{% endblock %}
+{% load custom_filters %}
+{% block title %}투표 상세보기{% endblock %}
 
 {% block content %}
 
@@ -48,9 +48,9 @@
     }
 </style>
 
-<h1>연습 일정 상세보기</h1>
+<h1>투표 상세보기</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 100%;">
-<h2>{{ selected_post.date }} - {{ selected_post.name }} ({{ selected_post.date|date:"D" }})</h2>
+<h2>{{ selected_post.date }} - {{ selected_post.name }} ({{ selected_post.date|date:"l"|korean_day }})</h2>
 <br> {{ selected_post.content }}
 
 <div class="checkbox-list">
@@ -69,10 +69,6 @@
         <button type="submit">선택</button>
     </form>
 </div>
-
-
-
-
 <br>
 <div class="detail-container">
     {% if attendees %}
@@ -116,10 +112,13 @@
 <form method="post" action="{% url 'attendances:update_attendance_status' selected_post.id %}">
     {% csrf_token %}
     <input type="hidden" name="available_date_id" value="{{ selected_post.id }}">
-    <input type="submit" onclick="return confirm('삭제하시겠습니까?')" value="삭제">
+</form>
+<form action="{% url 'attendances:delete_practice_date_detail' selected_post.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
 </form>
 <br>
-<a href="{% url 'attendances:practice_date_list' %}">연습 일정 목록으로 돌아가기</a>
+<a href="{% url 'attendances:practice_date_list' %}">투표 목록으로 돌아가기</a>
 <br>
 {% endblock %}
 

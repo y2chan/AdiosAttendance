@@ -22,9 +22,10 @@ urlpatterns = [
     path('practice_date/add', views.practice_date, name='practice_date'),
     path('practice_date/<int:pk>/', views.practice_date_detail, name='practice_date_detail'),
     path('practice_date/<int:available_date_id>/update_attendance_status/', views.update_attendance_status, name='update_attendance_status'),
-    path('practice_date/<int:available_date_id>/update_attendance_status/', views.update_attendance_status, name='update_attendance_status'),
+    path('practice_date/<int:pk>/delete/', views.delete_practice_date_detail, name='delete_practice_date_detail'),
     path('practice_available/', views.practice_available_list, name='practice_available_list'),
     path('practice_available/<int:practice_available_id>', views.practice_available_detail, name='practice_available_detail'),
     path('practice_available/add/', views.practice_available_add, name='practice_available_add'),
     path('practice_available/<int:pk>/delete/', views.delete_practice_available, name='delete_practice_available')
+
 ]
