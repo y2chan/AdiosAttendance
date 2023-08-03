@@ -408,12 +408,12 @@ def update_attendance_status(request, available_date_id):
     return redirect('attendances:practice_date_detail', pk=available_date_id)
 
 def delete_practice_date_detail(request, pk):
-    practice_date_detail = get_object_or_404(PracticeDateDetail, pk=pk)
+    practice_date_detail = get_object_or_404(AvailableDate, pk=pk)
 
     if request.method == 'POST':
         # POST 요청일 때만 삭제를 수행합니다.
         practice_date_detail.delete()
-        messages.success(request, '연습 일정이 삭제되었습니다.')
+        messages.success(request, '투표가 삭제되었습니다.')
         return redirect('attendances:practice_date_list')
 
     # POST 요청이 아닌 경우, 해당 연습 일정 상세 페이지로 리디렉션합니다.
