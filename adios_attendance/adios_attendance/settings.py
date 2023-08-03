@@ -80,8 +80,8 @@ DATABASES = {
              'ENGINE': 'django.db.backends.mysql',
              'NAME': 'adios',
              'USER': 'root',
-             'PASSWORD': 'root',
-             'HOST': 'localhost',
+             'PASSWORD': 'admin1234',
+             'HOST': '34.22.73.36',
              'PORT': '3306',
         }
 }
@@ -129,6 +129,8 @@ STATICFILES_DIRS = []
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['*']
 
 LOGIN_REDIRECT_URL = '/dashboard/'
 
