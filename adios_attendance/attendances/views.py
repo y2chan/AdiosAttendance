@@ -216,14 +216,42 @@ def all_attendance_list(request):
     })
 
 def notice(request):
-    now = timezone.now()
-    notices = Notice.objects.all().order_by('-created_at')  # 모든 공지를 가져옴
+    all_notices = Notice.objects.all().order_by('-created_at')
+
+    paginator = Paginator(all_notices, 4)  # 한 페이지에 4개의 공지사항을 보여줍니다.
+    page_number = request.GET.get('page')
+    notices = paginator.get_page(page_number)
+
+    # 이 부분에서 추가적인 context 변수를 전달합니다.
+    current_page_range = get_page_range_notice(notices)
 
     context = {
         'notices': notices,
+        'current_page_range': current_page_range,
     }
 
     return render(request, 'notice.html', context)
+
+def get_page_range_notice(page_obj, num_pages_to_show=10):
+    current_index = page_obj.number - 1
+    num_pages = page_obj.paginator.num_pages
+
+    if num_pages <= num_pages_to_show:
+        page_range = list(range(1, num_pages + 1))
+    else:
+        num_middle_pages = num_pages_to_show - 2
+        half_num_middle_pages = num_middle_pages // 2
+
+        if current_index <= half_num_middle_pages:
+            page_range = list(range(1, num_pages_to_show))
+        elif current_index >= num_pages - half_num_middle_pages - 1:
+            page_range = list(range(num_pages - num_pages_to_show + 1, num_pages + 1))
+        else:
+            start_index = current_index - half_num_middle_pages
+            end_index = current_index + half_num_middle_pages + 1
+            page_range = list(range(start_index + 1, end_index))
+
+    return page_range
 
 from django.utils import timezone
 
@@ -396,9 +424,38 @@ def practice_available_list(request):
 
     paginator = Paginator(practice_availables, 4)  # 한 페이지에 4개의 게시물을 보여줍니다.
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    availables = paginator.get_page(page_number)
 
-    return render(request, 'practice_available_list.html', {'practice_availables': practice_availables, 'page_obj': page_obj})
+    # 이 부분에서 추가적인 context 변수를 전달합니다.
+    current_page_range = get_page_range_practice(availables)
+
+    context = {
+            'availables': availables,
+            'current_page_range': current_page_range,
+        }
+
+    return render(request, 'practice_available_list.html', context)
+
+def get_page_range_practice(page_obj, num_pages_to_show=10):
+    current_index = page_obj.number - 1
+    num_pages = page_obj.paginator.num_pages
+
+    if num_pages <= num_pages_to_show:
+        page_range = list(range(1, num_pages + 1))
+    else:
+        num_middle_pages = num_pages_to_show - 2
+        half_num_middle_pages = num_middle_pages // 2
+
+        if current_index <= half_num_middle_pages:
+            page_range = list(range(1, num_pages_to_show))
+        elif current_index >= num_pages - half_num_middle_pages - 1:
+            page_range = list(range(num_pages - num_pages_to_show + 1, num_pages + 1))
+        else:
+            start_index = current_index - half_num_middle_pages
+            end_index = current_index + half_num_middle_pages + 1
+            page_range = list(range(start_index + 1, end_index))
+
+    return page_range
 
 def practice_available_detail(request, practice_available_id):
     practice_available = get_object_or_404(PracticeAvailable, id=practice_available_id)

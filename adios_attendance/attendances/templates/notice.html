@@ -1,5 +1,3 @@
-<!-- notice.html -->
-
 {% extends 'base.html' %}
 
 {% block title %}공지사항{% endblock %}
@@ -32,6 +30,15 @@
         font-size: 18px; /* 글씨 크기 설정 */
         font-weight: bold; /* 굵기 설정 */
         text-overflow: ellipsis;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+    }
+
+    .page-link {
+        margin-right: 10px; /* 원하는 간격(px)으로 조정 */
     }
 </style>
 
@@ -73,13 +80,54 @@
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-md-12 mb-4">
-        <p>최근 한 달 내의 공지가 없습니다.</p>
-    </div>
+
     {% endfor %}
-    {% endif %}
 </div>
+
+<nav aria-label="Notice Pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+
+        {% for num in current_page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+                    <span class="page-link">
+                        {{ num }}
+                    </span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% else %}
+<p>등록된 공지가 없습니다.</p>
+{% endif %}
 {% endblock %}
 
 
