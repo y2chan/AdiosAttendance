@@ -3,6 +3,46 @@
 {% block title %}투표{% endblock %}
 
 {% block content %}
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: -10px; /* 추가: 카드 간 좌우 간격 설정 */
+    }
+
+    .col-md-4 {
+        flex-basis: calc(20% - 20px);
+        margin: 10px; /* 수정: 카드 간 좌우 간격 설정 */
+    }
+
+    .card {
+        height: 100%;
+    }
+
+    .card-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-title {
+        font-size: 18px; /* 글씨 크기 설정 */
+        font-weight: bold; /* 굵기 설정 */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+    }
+
+    .page-link {
+        margin-right: 10px; /* 원하는 간격(px)으로 조정 */
+    }
+</style>
 
 <h1>투표</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 100%;">
@@ -27,22 +67,77 @@
     </li>
 </ul>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_date' %}'">투표 등록</button>
+
+<form method="get" action="{% url 'attendances:practice_date_list' %}">
+    <input type="text" name="q" placeholder="검색어를 입력하세요">
+    <button type="submit">검색</button>
+</form>
+
+{% if query %}
+<p>검색어: "{{ query }}"</p>
+{% endif %}
+
 {% if available_dates %}
-    <ul class="blog-list">
-        {% for available_date in available_dates %}
-        <li>
-            {{ available_date.name }} - {{ available_date.date|date:"Y-m-d" }} ({{ available_date.date|date:"l"|korean_day }})<br><br>
-            {{ available_date.content }}
-            <br>
-            <form method="POST" action="{% url 'attendances:practice_date_detail' available_date.pk %}">
-                {% csrf_token %}
-                <input type="submit" value="투표 인원 확인">
-            </form>
-        </li>
+<div class="row">
+    {% for available_date in available_dates %}
+    <div class="col-md-4 mb-4">
+        <div class="border border-primary rounded p-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ available_date.date|date:"Y-m-d" }} ({{ available_date.date|date:"l"|korean_day }})</h5>
+                    <p class="card-text">{{ available_date.content }}</p>
+                    <p class="card-text">{{ available_date.name }}</p>
+                    <a href="{% url 'attendances:practice_date_detail' available_date.pk %}" class="btn btn-primary">상세 정보 확인</a>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
+
+<nav aria-label="Vote Pagination">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+
+        {% for num in current_page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+                    <span class="page-link">
+                        {{ num }}
+                    </span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
 {% else %}
-<br>
 <p>등록된 투표가 없습니다.</p>
 {% endif %}
 {% endblock %}

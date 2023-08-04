@@ -64,6 +64,16 @@
     </li>
 </ul>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:practice_available_add' %}'">연습 불가 날짜 & 사유 등록</button>
+
+<form method="get" action="{% url 'attendances:practice_available_list' %}">
+    <input type="text" name="q" placeholder="검색어를 입력하세요">
+    <button type="submit">검색</button>
+</form>
+
+{% if query %}
+<p>검색어: "{{ query }}"</p>
+{% endif %}
+
 {% if availables %}
 <div class="row">
     {% for practice_available in availables %}

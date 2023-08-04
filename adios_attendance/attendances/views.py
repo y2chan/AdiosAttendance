@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.paginator import Paginator, Page
 from functools import wraps
+from django.db.models import Q
 import logging
 
 
@@ -216,18 +217,24 @@ def all_attendance_list(request):
     })
 
 def notice(request):
-    all_notices = Notice.objects.all().order_by('-created_at')
+    query = request.GET.get('q')
+    base_notices = Notice.objects.all().order_by('-created_at')  # 기본적으로 모든 공지사항을 날짜 역순으로 정렬
 
-    paginator = Paginator(all_notices, 4)  # 한 페이지에 4개의 공지사항을 보여줍니다.
+    if query:
+        filtered_notices = base_notices.filter(Q(title__icontains=query) | Q(content__icontains=query)).order_by('-created_at')
+    else:
+        filtered_notices = base_notices
+
+    paginator = Paginator(filtered_notices, 4)  # 한 페이지에 4개의 공지사항을 보여줍니다.
     page_number = request.GET.get('page')
     notices = paginator.get_page(page_number)
 
-    # 이 부분에서 추가적인 context 변수를 전달합니다.
     current_page_range = get_page_range_notice(notices)
 
     context = {
         'notices': notices,
         'current_page_range': current_page_range,
+        'query': query
     }
 
     return render(request, 'notice.html', context)
@@ -293,10 +300,17 @@ def notice_detail(request, notice_id):
     return render(request, 'notice_detail.html', {'form': form, 'notice': notice})
 
 def practice_date(request):
+    # 세션에서 현재 로그인한 사용자 이름 가져오기
+    current_user_name = request.session.get('name')
+
     if request.method == 'POST':
         form = DateForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = get_object_or_404(Student, name=current_user_name)
+            practice_date = form.save(commit=False)
+            practice_date.name = user
+            practice_date.save()
+
             return redirect('attendances:practice_date_list')
     else:
         form = DateForm()
@@ -305,6 +319,7 @@ def practice_date(request):
 
 
 def practice_date_list(request):
+    query = request.GET.get('q')
     available_dates = AvailableDate.objects.all().order_by('-date')
     selected_post = None
 
@@ -318,12 +333,49 @@ def practice_date_list(request):
         if selected_post_id:
             selected_post = AvailableDate.objects.get(id=selected_post_id)
 
+    if query:
+        filtered_available_dates = available_dates.filter(Q(content__icontains=query) | Q(name__icontains=query) | Q(date__icontains=query)).order_by('-date')
+    else:
+        filtered_available_dates = available_dates
+
+    paginator = Paginator(filtered_available_dates, 4)  # 한 페이지에 4개의 게시물을 보여줍니다.
+    page_number = request.GET.get('page')
+    vote = paginator.get_page(page_number)
+
+    # 이 부분에서 추가적인 context 변수를 전달합니다.
+    current_page_range = get_page_range_vote(vote)
+
     context = {
-        'available_dates': available_dates,
+        'available_dates': filtered_available_dates,
         'selected_post': selected_post,
+        'vote': vote,
+        'current_page_range': current_page_range,
     }
 
     return render(request, 'practice_date_list.html', context)
+
+def get_page_range_vote(page_obj, num_pages_to_show=10):
+    current_index = page_obj.number - 1
+    num_pages = page_obj.paginator.num_pages
+
+    if num_pages <= num_pages_to_show:
+        page_range = list(range(1, num_pages + 1))
+    else:
+        num_middle_pages = num_pages_to_show - 2
+        half_num_middle_pages = num_middle_pages // 2
+
+        if current_index <= half_num_middle_pages:
+            page_range = list(range(1, num_pages_to_show))
+        elif current_index >= num_pages - half_num_middle_pages - 1:
+            page_range = list(range(num_pages - num_pages_to_show + 1, num_pages + 1))
+        else:
+            start_index = current_index - half_num_middle_pages
+            end_index = current_index + half_num_middle_pages + 1
+            page_range = list(range(start_index + 1, end_index))
+
+    return page_range
+
+from django.utils import timezone
 
 def practice_date_detail(request, pk):
     # 세션에서 로그인 정보 가져오기
@@ -420,9 +472,14 @@ def delete_practice_date_detail(request, pk):
     return redirect('attendances:practice_date_detail', pk=pk)
 
 def practice_available_list(request):
+    query = request.GET.get('q')
     practice_availables = PracticeAvailable.objects.all().order_by('-created_date')
 
-    paginator = Paginator(practice_availables, 4)  # 한 페이지에 4개의 게시물을 보여줍니다.
+    if query:
+        filtered_practice_availables = practice_availables.filter(Q(content__icontains=query) | Q(student__name__icontains=query) | Q(date__icontains=query)).order_by('-date')
+    else:
+        filtered_practice_availables = practice_availables
+    paginator = Paginator(filtered_practice_availables, 4)  # 한 페이지에 4개의 게시물을 보여줍니다.
     page_number = request.GET.get('page')
     availables = paginator.get_page(page_number)
 
@@ -430,8 +487,9 @@ def practice_available_list(request):
     current_page_range = get_page_range_practice(availables)
 
     context = {
-            'availables': availables,
+            'availables': filtered_practice_availables,
             'current_page_range': current_page_range,
+            'query': query
         }
 
     return render(request, 'practice_available_list.html', context)
@@ -464,8 +522,7 @@ def practice_available_detail(request, practice_available_id):
         form = PracticeAvailableForm(request.POST, instance=practice_available)
         if form.is_valid():
             form.save()
-            return redirect('attendances:practice_available_list')  # Redirect to the practice_available_list page
-
+            return redirect('attendances:practice_available_list')
     else:
         form = PracticeAvailableForm(instance=practice_available)
 
@@ -480,13 +537,24 @@ def delete_practice_available(request, pk):
 
     return redirect('attendances:practice_available_list')
 
+
 def practice_available_add(request):
+    # 세션에서 현재 로그인한 사용자 이름 가져오기
+    current_user_name = request.session.get('name')
+
     if request.method == 'POST':
         form = PracticeAvailableForm(request.POST)
         if form.is_valid():
-            form.save()
+            # 현재 로그인한 사용자 정보를 가져와서 student 필드에 저장
+            user = get_object_or_404(Student, name=current_user_name)
+            practice_available = form.save(commit=False)
+            practice_available.student = user
+            practice_available.save()
+
             return redirect('attendances:practice_available_list')
     else:
         form = PracticeAvailableForm()
 
     return render(request, 'practice_available_add.html', {'form': form})
+
+

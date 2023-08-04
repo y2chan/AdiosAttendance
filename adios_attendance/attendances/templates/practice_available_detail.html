@@ -10,6 +10,8 @@
 
 <form method="post">
     {% csrf_token %}
+    <p>작성자</p>
+    <h3>{{ practice_available.student.name }}</h3>
     {{ form.as_p }}
     <button type="submit">저장</button>
 </form>

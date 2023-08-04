@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
 class Student(AbstractUser):
     username = None  # We are using student_id as the username field, so we set username to None
     student_id = models.CharField(max_length=10, unique=True, verbose_name='Student ID')
-    name = models.CharField(max_length=50, verbose_name='Name')
+    name = models.CharField(max_length=50, unique=True, verbose_name='Name')
 
     USERNAME_FIELD = 'student_id'  # Set 'student_id' as the field for authentication
     REQUIRED_FIELDS = ['name']  # Add 'name' to the required fields for createsuperuser

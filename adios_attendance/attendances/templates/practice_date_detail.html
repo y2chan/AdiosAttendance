@@ -36,12 +36,12 @@
         margin-right: 0;
     }
 
-    .checkbox-list {
+    .radio-list {
         display: flex;
         flex-wrap: wrap;
     }
 
-    .checkbox-item {
+    .radio-item {
         display: flex;
         align-items: center;
         margin-right: 20px;
@@ -50,19 +50,20 @@
 
 <h1>투표 상세보기</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 100%;">
-<h2>{{ selected_post.date }} - {{ selected_post.name }} ({{ selected_post.date|date:"l"|korean_day }})</h2>
+<h2>{{ selected_post.date }} ({{ selected_post.date|date:"l"|korean_day }})
+    <br>{{ selected_post.name }}</h2>
 <br> {{ selected_post.content }}
 
 <div class="checkbox-list">
     <form method="post" action="{% url 'attendances:update_attendance_status' selected_post.id %}">
         {% csrf_token %}
-        <div class="checkbox-list">
-            <div class="checkbox-item">
-                <input type="checkbox" name="is_attending" value="True" id="attend" {% if user_vote and user_vote.is_attending %}checked{% endif %}>
+        <div class="radio-list">
+            <div class="radio-item">
+                <input type="radio" name="is_attending" value="True" id="attend" {% if user_vote and user_vote.is_attending %}checked{% endif %}>
                 <label for="attend">참가하기</label>
             </div>
-            <div class="checkbox-item">
-                <input type="checkbox" name="is_attending" value="False" id="absent" {% if user_vote and not user_vote.is_attending %}checked{% endif %}>
+            <div class="radio-item">
+                <input type="radio" name="is_attending" value="False" id="absent" {% if user_vote and not user_vote.is_attending %}checked{% endif %}>
                 <label for="absent">불참하기</label>
             </div>
         </div>

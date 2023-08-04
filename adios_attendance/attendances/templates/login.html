@@ -20,9 +20,9 @@
 <form method="post" action="{% url 'attendances:user_login' %}">
     {% csrf_token %}
     <label for="student_id">학번</label>
-    <input type="text" id="student_id" name="student_id" required>
+    <input type="text" id="student_id" name="student_id" pattern="[0-9]{10}" title="학번은 10자리 숫자여야 합니다." required>
     <label for="name">이름</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="name" pattern="[\uAC00-\uD7A3]{2,3}" title="이름은 2~3자리 한글로 입력해야 합니다."required>
     <br>
     <button type="submit">로그인</button>
 </form>

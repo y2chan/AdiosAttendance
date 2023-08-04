@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block title %}All Attendance List{% endblock %}
-
 {% block content %}
 <h1>전체 출석 목록</h1>
 <hr align=center style="border: solid 5px #007BFF; width: 100%;">
@@ -31,7 +30,7 @@
     <button type="submit">조회</button>
 </form>
 <div class="attendance-container">
-    <div class="attendance-records">
+    <div class="attendance-records left">
         <h3>출석 목록</h3>
         {% if attendance_present_students %}
         <ul>
@@ -43,7 +42,7 @@
         <p>출석한 인원이 없습니다.</p>
         {% endif %}
     </div>
-    <div class="attendance-records">
+    <div class="attendance-records right">
         <h3>결석 목록</h3>
         {% if attendance_absent_students %}
         <ul>
@@ -56,5 +55,27 @@
         {% endif %}
     </div>
 </div>
-{% endblock %}
+<style>
+    .attendance-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
 
+    .attendance-records {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .left {
+        margin-right: 10px;
+    }
+
+    .right {
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
