@@ -13,6 +13,12 @@
 </body>
 </html>
 {% block content %}
+<style>
+    /* 오류 메시지를 파란색으로 스타일링 */
+    ul.errorlist {
+      color: #007BFF;
+    }
+</style>
 <h1>Adios 출석 로그인</h1>
 {% if error_message %}
 <p>{{ error_message }}</p>

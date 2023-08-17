@@ -4,6 +4,7 @@
 <html>
 <title>{% block title %}Adios 동아리 출석 시스템{% endblock %}</title>
 <head>
+    <meta name="viewport" content="width=device-width,initial-scale=0.9, user-scalable=no"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -21,11 +22,7 @@
     }
 </style>
 {% block content %}
-<h1>Adios Attendance</h1>
-<hr align=center style="border: solid 5px #007BFF; width: 20%;">
+<h1>Adios 출석 시스템</h1>
 <br>
 <button class="btn btn-primary" onclick="location.href='{% url 'attendances:user_login' %}'">로그인</button>
-<br>
-<button class="btn btn-primary" onclick="location.href='{% url 'attendances:signup' %}'">회원가입</button>
-<br>
 {% endblock %}
